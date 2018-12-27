@@ -1,0 +1,16 @@
+
+Chess:
+--------------------
+- chessBoard: **int
+- capturedBlack(string) (passes piece string): string[]
+- capturedWhite(string) : string[]
+
+--------------------
++ chess() (constructor)
++ ~chess() (destructor)
++ setupBoard(): void
++ movePiece(string): void
++ capturePiece(string): string
++ printBoard() const: void
++ isCheckMate(int, int): bool (parameters: board coordinates)
++ returnPiece(string): string
