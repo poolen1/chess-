@@ -220,8 +220,8 @@ void chess::movePiece()
 			toRow = 7;
 
 		//TEST
-		cout << "toCol: " << toCol << endl;
-		cout << "toRow: " << toRow << endl;
+		cout << "toCol input: " << toCol << endl;
+		cout << "toRow input: " << toRow << endl;
 		cout << "Piece: " << chessBoard[toCol][toRow] << endl;
 
 		if (turn == 1){
@@ -260,23 +260,33 @@ void chess::movePiece()
 
 		if (chessBoard[fromCol][fromRow] == "♜"
 			|| chessBoard[fromCol][fromRow] == "♖"){
-			moveRook(fromCol, fromRow, toCol, toRow);
+			moved = moveRook(fromCol, fromRow, toCol, toRow);
+			if (!moved)
+				continue;
 		}
 		else if (chessBoard[fromCol][fromRow] == "♞"
 			|| chessBoard[fromCol][fromRow] == "♘"){
-			moveKnight(fromCol, fromRow, toCol, toRow);
+			moved = moveKnight(fromCol, fromRow, toCol, toRow);
+			if (!moved)
+				continue;
 		}
 		else if (chessBoard[fromCol][fromRow] == "♝"
 			|| chessBoard[fromCol][fromRow] == "♗"){
-			moveBishop(fromCol, fromRow, toCol, toRow);
+			moved = moveBishop(fromCol, fromRow, toCol, toRow);
+			if (!moved)
+				continue;
 		}
 		else if (chessBoard[fromCol][fromRow] == "♚"
 			|| chessBoard[fromCol][fromRow] == "♔"){
-			moveKing(fromCol, fromRow, toCol, toRow);
+			moved = moveKing(fromCol, fromRow, toCol, toRow);
+			if (!moved)
+				continue;
 		}
 		else if (chessBoard[fromCol][fromRow] == "♛"
 			|| chessBoard[fromCol][fromRow] == "♕"){
-			moveQueen(fromCol, fromRow, toCol, toRow);
+			moved = moveQueen(fromCol, fromRow, toCol, toRow);
+			if (!moved)
+				continue;
 		}
 
 		toInput = true;
@@ -423,6 +433,8 @@ bool chess::moveBlackPawn(int fromCol, int fromRow, int toCol, int toRow)
 	//TEST
 	cout << "Black Pawn Test" << endl;
 
+	int recover;
+
 	if (toRow == fromRow+1 && chessBoard[toCol][toRow] == " " && toCol == fromCol)
 		swapPieces(fromCol, fromRow, toCol, toRow);
 	else if (fromRow == 1 && toRow == fromRow+2 && chessBoard[toCol][toRow] == " "
@@ -434,6 +446,21 @@ bool chess::moveBlackPawn(int fromCol, int fromRow, int toCol, int toRow)
 	else{
 		cout << "Pawns cannot move that way!" << endl;
 		return false;
+	}
+
+	//Return black piece
+	if (toRow == 7){
+		cout << "Choose a captured piece to return: " << endl;
+		for (int i=0; i<15; i++)
+			cout << " " << capturedBlack[i];
+		cout << endl;
+		for (int i=0; i<15; i++){
+			if (capturedBlack[i] != " ")
+				cout << " " << i;
+		}
+		cout << endl;
+		cin >> recover;
+		returnPiece(capturedBlack[recover]);
 	}
 
 	return true;
@@ -450,6 +477,8 @@ bool chess::moveWhitePawn(int fromCol, int fromRow, int toCol, int toRow)
 	//TEST
 	cout << "White Pawn Test" << endl;
 
+	int recover;
+
 	if (toRow == fromRow-1 && chessBoard[toCol][toRow] == " " && toCol == fromCol)
 		swapPieces(fromCol, fromRow, toCol, toRow);
 	else if (fromRow == 6 && toRow == fromRow-2 && chessBoard[toCol][toRow] == " "
@@ -463,6 +492,21 @@ bool chess::moveWhitePawn(int fromCol, int fromRow, int toCol, int toRow)
 		return false;
 	}
 
+	//Return white piece
+	if (toRow == 0){
+		cout << "Choose a captured piece to return: " << endl;
+		for (int i=0; i<15; i++)
+			cout << " " << capturedWhite[i];
+		cout << endl;
+		for (int i=0; i<15; i++){
+			if (capturedWhite[i] != " ")
+				cout << " " << i;
+		}
+		cout << endl;
+		cin >> recover;
+		returnPiece(capturedWhite[recover]);
+	}
+
 	return true;
 }
 
@@ -474,6 +518,58 @@ POSTCONDITION(S):
 ---------------------------------------*/
 bool chess::moveRook(int fromCol, int fromRow, int toCol, int toRow)
 {
+	//rook downboard
+	if (toRow > fromRow && toCol == fromCol){
+		for (int i=fromRow+1; i<toRow; i++){
+			if (chessBoard[toCol][i] != " "){
+				cout << "Rooks can't jump!" << endl;
+				return false;
+			}
+		}
+		swapPieces(fromCol, fromRow, toCol, toRow);
+	//TEST
+	//cout << "rook downtest" << endl;
+	}
+
+	//rook up
+	else if (toRow < fromRow && toCol == fromCol){
+		for (int i=fromRow-1; i>toRow; i--){
+			if (chessBoard[toCol][i] != " "){
+				cout << "Rooks can't jump!" << endl;
+				return false;
+			}
+		}
+		swapPieces(fromCol, fromRow, toCol, toRow);
+	//TEST
+	//cout << "rook uptest" << endl;
+	}
+
+	//rook right
+	else if (toCol > fromCol && toRow == fromRow){
+		for (int i=fromCol+1; i<toCol; i++){
+			if (chessBoard[i][toRow] != " "){
+				cout << "Rooks can't jump!" << endl;
+				return false;
+			}
+		}
+		swapPieces(fromCol, fromRow, toCol, toRow);
+	//TEST
+	//cout << "rook righttest" << endl;
+	}
+
+	//rook left
+	else if (toCol < fromCol && toRow == fromRow){
+		for (int i=fromCol-1; i>toCol; i--){
+			if (chessBoard[i][toRow] != " "){
+				cout << "Rooks can't jump!" << endl;
+				return false;
+			}
+		}
+		swapPieces(fromCol, fromRow, toCol, toRow);
+	//TEST
+	//cout << "rook lefttest" << endl;
+	}
+
 	return true;
 }
 
@@ -485,6 +581,15 @@ POSTCONDITION(S):
 ---------------------------------------*/
 bool chess::moveKnight(int fromCol, int fromRow, int toCol, int toRow)
 {
+	if ((toCol==fromCol+1 && toRow==fromRow+2) || (toCol==fromCol+2 && toRow==fromRow+1)
+		|| (toCol==fromCol-1 && toRow==fromRow+2) || (toCol==fromCol-2 && toRow==fromRow+1)
+		|| (toCol==fromCol+1 && toRow==fromRow-2) || (toCol==fromCol+2 && toRow==fromRow-1) 
+		|| (toCol==fromCol-1 && toRow==fromRow-2) || (toCol==fromCol-2 && toRow==fromRow-1))
+		swapPieces(fromCol, fromRow, toCol, toRow);
+	else{
+		cout << "Knights can't move that way!" << endl;
+		return false;
+	}
 	return true;
 }
 
