@@ -11,9 +11,11 @@ public:
 	void setupBoard();
 	void movePiece();
 	void printBoard() const;
-	bool isCheck(int, int);
+	bool isPath(int, int);
 	bool isCheckMate(int, int);
-	string returnPiece(string);
+	bool isStaleMate(int, int);
+	void returnPiece(int, int);
+	bool isBlocked(string, int, int);
 
 private:
 	string chessBoard[8][8];
@@ -22,8 +24,12 @@ private:
 	int wCaptured;
 	int bCaptured;
 	int turn;
-	int whiteKing;
-	int blackKing;
+	int wKingCol;
+	int wKingRow;
+	int bKingCol;
+	int bKingRow;
+	bool wKingCheck;
+	bool bKingCheck;
 	bool moveBlackPawn(int, int, int, int);	//(fromCol, fromRow, toCol, toRow)
 	bool moveWhitePawn(int, int, int, int);
 	bool moveRook(int, int, int, int);	
@@ -33,4 +39,6 @@ private:
 	bool moveKing(int, int, int, int);
 	void swapPieces(int, int, int, int);
 	void capturePiece(int, int); //(toCol, toRow)
+	bool isBlack(int, int);
+	bool isWhite(int, int);
 };
